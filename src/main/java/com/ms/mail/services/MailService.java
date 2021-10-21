@@ -17,6 +17,7 @@ public class MailService {
     @Autowired
     MailRepository mailRepository;
 
+    @Autowired
     private JavaMailSender mailSender;
 
     public MailModel sendMail(MailModel mailModel) {
@@ -28,8 +29,9 @@ public class MailService {
             message.setSubject(mailModel.getSubject());
             message.setText(mailModel.getText());
             mailSender.send(message);
+
             mailModel.setStatusMail(StatusMail.SENT);
-        } catch (NullPointerException e){
+        } catch (MailException e){
             mailModel.setStatusMail(StatusMail.ERROR);
         } finally {
             return mailRepository.save(mailModel);
